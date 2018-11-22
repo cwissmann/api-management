@@ -8,8 +8,8 @@ namespace CosmosDBInitializer
 {
     class Program
     {
-        private const string EndpointUri = "https://[API].documents.azure.com:443/";
-        private const string PrimaryKey = "[PRIMARYKEY]";
+        private const string EndpointUri = "URI";
+        private const string PrimaryKey = "PRIMARYKEY";
 
         private const string dbName = "dojodb";
         private const string collectionName = "locomotives";
@@ -32,14 +32,13 @@ namespace CosmosDBInitializer
                 Program p = new Program();
                 p.AccessCosmosDb().Wait();
 
-                p.client.CreateDatabaseIfNotExistsAsync(new Database { Id = dbName });
+                p.client.CreateDatabaseIfNotExistsAsync(new Database { Id = dbName }).Wait();
 
-                p.client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(dbName), new DocumentCollection { Id = collectionName });
+                p.client.CreateDocumentCollectionIfNotExistsAsync(UriFactory.CreateDatabaseUri(dbName), new DocumentCollection { Id = collectionName }).Wait();
 
                 foreach (var locomotive in locomotives)
                 {
                     p.InsertDocument(dbName, collectionName, locomotive).Wait();
-                    Console.WriteLine($"Insert Baureihe {locomotive.Baureihe}");
                 }
             }
             catch (DocumentClientException de)
@@ -69,6 +68,7 @@ namespace CosmosDBInitializer
             try
             {
                 await this.client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(databaseName, collectionName), locomotive);
+                Console.WriteLine($"Insert Baureihe {locomotive.Baureihe}");
             }
             catch (DocumentClientException de)
             {
