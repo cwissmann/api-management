@@ -18,7 +18,7 @@ namespace APIapp
 
         private static DocumentClient client;
 
-        public static void TypeInitializationException()
+        public static void Initialize()
         {
             client = new DocumentClient(new Uri(Endpoint), PrimaryKey);
         }
