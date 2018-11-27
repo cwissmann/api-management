@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.Azure.Documents.Linq;
 
@@ -53,6 +54,21 @@ namespace APIapp
             }
 
             return results;
+        }
+
+        public static async Task<Document> CreateItemAsync(T entity)
+        {
+            return await client.CreateDocumentAsync(UriFactory.CreateDocumentCollectionUri(DatabaseId, CollectionId), entity);
+        }
+
+        public static async Task<Document> UpdateItemAsync(string id, object entity)
+        {
+            return await client.ReplaceDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id), entity);
+        }
+
+        public static async Task<Document> DeleteItemAsync(string id)
+        {
+            return await client.DeleteDocumentAsync(UriFactory.CreateDocumentUri(DatabaseId, CollectionId, id));
         }
     }
 }
